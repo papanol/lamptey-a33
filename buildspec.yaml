@@ -1,0 +1,37 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 730335228444.dkr.ecr.us-east-1.amazonaws.com
+      - echo "Pre-build phase complete."
+
+  build:
+    commands:
+      - echo "Building the Docker image..."
+      - docker build -t assignment3mayowa .
+      - docker tag assignment3mayowa:latest 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest
+      - echo "Build phase complete."
+
+  post_build:
+    commands:
+      - echo "Pushing the Docker image to ECR..."
+      - docker push 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest
+      - echo "Creating imagedefinitions.json..."
+      - printf '[{"name":"mayowa-container","imageUri":"%s"}]' 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest > imagedefinitions.json
+      - echo "Post-build phase complete."
+
+artifacts:
+  files:
+    - imagedefinitions.json
+    - app.py
+    - Dockerfile
+    - requirements.txt
+
