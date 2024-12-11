@@ -10,22 +10,22 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 730335228444.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 112547104148.dkr.ecr.us-east-1.amazonaws.com
       - echo "Pre-build phase complete."
 
   build:
     commands:
       - echo "Building the Docker image..."
-      - docker build -t assignment3mayowa .
-      - docker tag assignment3mayowa:latest 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest
+      - docker build -t assignment3lamptey .
+      - docker tag assignment3lamptey:latest 112547104148.dkr.ecr.us-east-1.amazonaws.com/assignment3lamptey:latest
       - echo "Build phase complete."
 
   post_build:
     commands:
       - echo "Pushing the Docker image to ECR..."
-      - docker push 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest
+      - docker push 112547104148.dkr.ecr.us-east-1.amazonaws.com/assignment3lamptey:latest
       - echo "Creating imagedefinitions.json..."
-      - printf '[{"name":"mayowa-container","imageUri":"%s"}]' 730335228444.dkr.ecr.us-east-1.amazonaws.com/assignment3mayowa:latest > imagedefinitions.json
+      - printf '[{"name":"lamptey-container","imageUri":"%s"}]' 112547104148.dkr.ecr.us-east-1.amazonaws.com/assignment3lamptey:latest > imagedefinitions.json
       - echo "Post-build phase complete."
 
 artifacts:
@@ -34,4 +34,3 @@ artifacts:
     - app.py
     - Dockerfile
     - requirements.txt
-
